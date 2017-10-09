@@ -1,0 +1,48 @@
+obj
+packages
+bin
+.vs
+*.ORIG
+*.BACKUP
+*.LOCAL
+*.REMOTE
+/Mvc5StarterKit/packages
+/Mvc5StarterKit/logs
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+
+# OS generated files #
+.DS_Store*
+Icon?
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# Publish Web Output
+*.Publish.xml
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
