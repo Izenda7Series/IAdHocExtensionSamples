@@ -6,6 +6,8 @@ This repisitory was created to streamline the implementation of our IAdHocExtens
 DeploymentMode 1 instance (The API/back-end is separate from the front-end solution) it is necessary to construct a .dll to employ these behaviors.
 The provided solution will generate a .dll for you once it is built that you can place alongside the other .dlls in our API.
 
+ :warning: **This is designed for demonstration purposes and should not be used "as-is" in a production environment. You can use this for reference or a baseline but ensure that security and customization meet the standards of your company.**
+
 ## Getting Started 
 
 After downloading the contents of the repository, you will see one file, CustomAdhocReports.cs, within the solution once you've opened it. This file will be where
