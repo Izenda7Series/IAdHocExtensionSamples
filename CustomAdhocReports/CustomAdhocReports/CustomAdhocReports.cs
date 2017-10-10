@@ -13,6 +13,11 @@ namespace CustomAdhocReports
     [Export(typeof(IAdHocExtension))]
     class CustomAdhocReports : DefaultAdHocExtension
     {
+        public override List<DataFormat> LoadCustomDataFormat()
+        {
+            return CustomDataFormat.LoadCustomDataFormat();
+        }
+
         public override ReportFilterSetting SetHiddenFilters(SetHiddenFilterParam param)
         {
             var filterFieldName = "ShipCountry";
