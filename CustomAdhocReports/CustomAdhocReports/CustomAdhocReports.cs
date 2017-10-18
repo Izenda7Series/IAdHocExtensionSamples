@@ -13,11 +13,25 @@ namespace CustomAdhocReports
     [Export(typeof(IAdHocExtension))]
     class CustomAdhocReports : DefaultAdHocExtension
     {
+        /// <summary>
+        /// Adds custom formats for a specified data type.
+        /// </summary>
         public override List<DataFormat> LoadCustomDataFormat()
         {
             return CustomDataFormat.LoadCustomDataFormat();
         }
 
+        /// <summary>
+        /// Customizes the report content on the fly before it is executed.
+        /// </summary>
+        public override ReportDefinition OnPreExecute(ReportDefinition reportDefinition)
+        {
+            return CustomReportDefinition.OnPreExecute(reportDefinition);
+        }
+
+        /// <summary>
+        /// Sets custom filters which are hidden to the user of the interface.
+        /// </summary>
         public override ReportFilterSetting SetHiddenFilters(SetHiddenFilterParam param)
         {
             var filterFieldName = "ShipCountry";

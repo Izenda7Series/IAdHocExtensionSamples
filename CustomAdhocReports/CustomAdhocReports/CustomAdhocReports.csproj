@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CustomAdhocReports.cs" />
     <Compile Include="CustomDataFormat.cs" />
+    <Compile Include="CustomReportDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
