@@ -56,7 +56,7 @@ namespace CustomAdhocReports
                 };
                 var secondFilter = new ReportFilterField
                 {
-                    Alias = $"ShipRegion{filterPosition}",
+                    Alias = $"ShipCountry{filterPosition}",
                     QuerySourceId = querySource.Id,
                     SourceDataObjectName = querySource.Name,
                     QuerySourceType = querySource.Type,
