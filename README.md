@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repisitory was created to streamline the implementation of our IAdHocExtension methods. In a standalone instance of Izenda, or in a
+This repository was created to streamline the implementation of our IAdHocExtension methods. In a standalone instance of Izenda, or in a
 DeploymentMode 1 instance (The API/back-end is separate from the front-end solution) it is necessary to construct a .dll to employ these behaviors.
 The provided solution will generate a .dll for you once it is built that you can place alongside the other .dlls in our API.
 
