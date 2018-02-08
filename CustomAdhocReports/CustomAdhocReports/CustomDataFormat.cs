@@ -22,7 +22,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "By Hour",
-                    DataType = IzendaDataType.DatetimeType,
+                    DataType = DataType.DateTime,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -32,7 +32,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "dd MM:mm",
-                    DataType = IzendaDataType.DatetimeType,
+                    DataType = DataType.DateTime,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -43,7 +43,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "dd HH:mm:ss",
-                    DataType = IzendaDataType.DatetimeType,
+                    DataType = DataType.DateTime,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -54,7 +54,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "dd mm:ss",
-                    DataType = IzendaDataType.DatetimeType,
+                    DataType = DataType.DateTime,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
