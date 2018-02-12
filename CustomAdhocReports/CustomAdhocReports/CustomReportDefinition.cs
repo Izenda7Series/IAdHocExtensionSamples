@@ -3,6 +3,7 @@ using System.Linq;
 using Izenda.BI.Framework.Models.ReportDesigner;
 using Izenda.BI.Framework.Constants;
 using Izenda.BI.Framework.Models.Contexts;
+using System.Collections.Generic;
 
 namespace CustomAdhocReports
 {
@@ -45,6 +46,25 @@ namespace CustomAdhocReports
             {
                 var filteredReportPart = reportDefinition.ReportPart.Where(x => x.ReportPartContent.Type != ReportPartContentType.Map).ToList();
                 reportDefinition.ReportPart = filteredReportPart;
+            }
+
+            // Re-order/remove columns on a grid
+            if (reportDefinition.Name == "Re-Order Columns")
+            {
+                foreach (ReportPartGrid reportPart in reportDefinition.ReportPart.Select(f => f.ReportPartContent).Where(f => f.Type == ReportPartContentType.Grid))
+                {
+                    var elements = new List<Element>();
+
+                    reportPart.Columns.Elements.First(e => e.Name == "EmployeeID").Position = 1;
+                    reportPart.Columns.Elements.First(e => e.Name == "CustomerID").Position = 2;
+                    reportPart.Columns.Elements.First(e => e.Name == "OrderID").Position = 3;
+
+                    elements.Add(reportPart.Columns.Elements.FirstOrDefault(e => e.Name == "EmployeeID"));
+                    elements.Add(reportPart.Columns.Elements.FirstOrDefault(e => e.Name == "CustomerID"));
+                    elements.Add(reportPart.Columns.Elements.FirstOrDefault(e => e.Name == "OrderID"));
+
+                    reportPart.Columns.Elements = elements;
+                }
             }
 
             return reportDefinition;
