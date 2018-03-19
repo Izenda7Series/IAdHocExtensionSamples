@@ -65,7 +65,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "£0,000",
-                    DataType = IzendaDataType.NumericType,
+                    DataType = DataType.Numeric,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -75,7 +75,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "¥0,000",
-                    DataType = IzendaDataType.NumericType,
+                    DataType = DataType.Numeric,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -85,7 +85,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "0,000",
-                    DataType = IzendaDataType.NumericType,
+                    DataType = DataType.Numeric,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -95,7 +95,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "$0,000",
-                    DataType = IzendaDataType.NumericType,
+                    DataType = DataType.Numeric,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
@@ -105,7 +105,7 @@ namespace CustomAdhocReports
                 new DataFormat
                 {
                     Name = "HH:MM:SS",
-                    DataType = IzendaDataType.NumericType,
+                    DataType = DataType.Numeric,
                     Category = IzendaKey.CustomFormat,
                     FormatFunc = (x) =>
                     {
