@@ -19,11 +19,18 @@ namespace CustomAdhocReports
         {
             // Updates a filter's alias and changes the operator to filter on.
             const string filterToBeCustomized = "CustomerID";
-            foreach (var filter in reportDefinition.ReportFilter.FilterFields.Where(f => f.Alias == filterToBeCustomized))
+            foreach (var updatedFilter in reportDefinition.ReportFilter.FilterFields.Where(f => f.Alias == filterToBeCustomized))
             {
-                filter.Alias = "Customized-Id";
-                filter.OperatorId = Guid.Parse("5CE630BC-6615-42C4-B11E-1D09C651EAAE");
-                filter.OperatorName = "Equals (Checkbox)";
+                updatedFilter.Alias = "Customized-Id";
+                updatedFilter.OperatorId = Guid.Parse("5CE630BC-6615-42C4-B11E-1D09C651EAAE");
+                updatedFilter.OperatorName = "Equals (Checkbox)";
+            }
+
+            // Defaults filter to today's date
+            var filter = reportDefinition?.ReportFilter?.FilterFields.FirstOrDefault(f => f.SourceFieldName == "OrderDate");
+            if (filter != null && filter.State != EntityState.Update && !filter.IsOveridingInheritedFilter)
+            {
+                filter.Value = DateTime.Today.ToString("MM/dd/yyyy");
             }
 
             // Updates a column's name/alias
