@@ -24,6 +24,7 @@ namespace CustomAdhocReports
         /// <summary>
         /// Customizes the report content on the fly before it is executed.
         /// </summary>
+        /// <param name="reportDefinition">The report definition.</param>
         public override ReportDefinition OnPreExecute(ReportDefinition reportDefinition)
         {
             return CustomReportDefinition.OnPreExecute(reportDefinition);
@@ -32,113 +33,86 @@ namespace CustomAdhocReports
         /// <summary>
         /// Sets custom filters which are hidden to the user of the interface.
         /// </summary>
+        /// <param name="param">The hidden filter parameter.</param>
         public override ReportFilterSetting SetHiddenFilters(SetHiddenFilterParam param)
         {
-            var filterFieldName = "ShipCountry";
+            var filterSetting = new ReportFilterSetting() { FilterFields = new List<ReportFilterField>() };
 
-            Func<ReportFilterSetting, int, QuerySource, QuerySourceField, Guid, Relationship, int> addHiddenFilters = (result, filterPosition, querySource, field, equalOperator, rel) =>
+            this.AddHiddenFilter(param, filterSetting, "ShipCountry", new List<string> { "USA", "Germany" });
+            this.AddHiddenFilter(param, filterSetting, "ProductID", new List<string> { "5" });
+
+            return filterSetting;
+        }
+
+        /// <summary>
+        /// Adds a hidden filter based on field name and values passed
+        /// </summary>
+        /// <param name="param">The hidden filter parameter.</param>
+        /// <param name="filterSetting">The report filter setting.</param>
+        /// <param name="filterFieldName">The filter field names.</param>
+        /// <param name="values">The values.</param>
+        /// <returns>The report filter setting.</returns>
+        private ReportFilterSetting AddHiddenFilter(SetHiddenFilterParam param, ReportFilterSetting filterSetting, string filterFieldName, List<string> values)
+        {
+            Action<QuerySource, QuerySourceField, Guid, Relationship> addHiddenFilters = (querySource, field, operatorId, rel) =>
             {
-                var firstFilter = new ReportFilterField
+                var value = string.Join(";#", values);
+                var filterPosition = filterSetting.FilterFields.Count + 1;
+
+                var filter = new ReportFilterField
                 {
-                    Alias = $"ShipCountry{filterPosition}",
+                    Alias = $"{field.Name}{filterPosition}",
                     QuerySourceId = querySource.Id,
                     SourceDataObjectName = querySource.Name,
                     QuerySourceType = querySource.Type,
                     QuerySourceFieldId = field.Id,
                     SourceFieldName = field.Name,
                     DataType = field.DataType,
-                    Position = ++filterPosition,
-                    OperatorId = equalOperator,
-                    Value = "USA",
+                    Position = filterPosition,
+                    OperatorId = operatorId,
+                    Value = value,
                     RelationshipId = rel?.Id,
                     IsParameter = false,
                     ReportFieldAlias = null
                 };
-                var secondFilter = new ReportFilterField
-                {
-                    Alias = $"ShipCountry{filterPosition}",
-                    QuerySourceId = querySource.Id,
-                    SourceDataObjectName = querySource.Name,
-                    QuerySourceType = querySource.Type,
-                    QuerySourceFieldId = field.Id,
-                    SourceFieldName = field.Name,
-                    DataType = field.DataType,
-                    Position = ++filterPosition,
-                    OperatorId = equalOperator,
-                    Value = "Germany",
-                    RelationshipId = rel?.Id,
-                    IsParameter = false,
-                    ReportFieldAlias = null
-                };
-                result.FilterFields.Add(firstFilter);
-                result.FilterFields.Add(secondFilter);
 
-                var logic = $"({filterPosition - 1} OR {filterPosition})";
-                if (string.IsNullOrEmpty(result.Logic))
-                {
-                    result.Logic = logic;
-                }
-
-                return filterPosition;
+                filterSetting.FilterFields.Add(filter);
             };
 
-            var filterSetting = new ReportFilterSetting()
-            {
-                FilterFields = new List<ReportFilterField>()
-            };
-            var position = 0;
-
-            var ds = param.ReportDefinition.ReportDataSource;
-
-            // Build the hidden filters for ship country fields
-            foreach (var querySource in param.QuerySources // Scan thru the query sources that are involved in the report
-                .Where(x => x.QuerySourceFields.Any(y => y.Name.Equals(filterFieldName, StringComparison.OrdinalIgnoreCase)))) // Take only query sources that have filter field name
+            // Scan thru the query sources/fields that are involved in the report
+            foreach (var querySource in param.QuerySources
+                .Where(x => x.QuerySourceFields.Any(y => y.Name.Equals(filterFieldName, StringComparison.OrdinalIgnoreCase))))
             {
                 // Pick the relationships that joins the query source as primary source
                 // Setting the join ensure the proper table is assigned when using join alias in the UI
-                var rels = param.ReportDefinition.ReportRelationship.
-                    Where(x => x.JoinQuerySourceId == querySource.Id)
-                    .ToList();
+                var rels = param.ReportDefinition.ReportRelationship.Where(x => x.JoinQuerySourceId == querySource.Id);
 
                 // Count the relationships that the filter query source is foreign query source
-                var foreignRelCounts = param.ReportDefinition.ReportRelationship
-                    .Where(x => x.ForeignQuerySourceId == querySource.Id)
-                    .Count();
+                var foreignRelCounts = param.ReportDefinition.ReportRelationship.Where(x => x.ForeignQuerySourceId == querySource.Id).Count();
 
                 // Find actual filter field in query source
                 var field = querySource.QuerySourceFields.FirstOrDefault(x => x.Name.Equals(filterFieldName, StringComparison.OrdinalIgnoreCase));
 
-                // Pick the equal operator
+                // Get the filter operator GUID
                 var equalOperator = Izenda.BI.Framework.Enums.FilterOperator.FilterOperator.EqualsManualEntry.GetUid();
 
                 // In case there is no relationship that the query source is joined as primary
-                if (rels.Count() == 0)
+                if (!rels.Any())
                 {
                     // Just add hidden filter with null relationship
-                    position = addHiddenFilters(filterSetting, position, querySource, field, equalOperator, null);
+                    addHiddenFilters(querySource, field, equalOperator, null);
                 }
                 else
                 {
-                    // Add another hidden filter for query source that appears in both alias primary and foreign query source of relationships.
-                    // This step is mandatory because when aliasing a primary query source, it becomes another instance of query source in the query. 
-                    // So if we only add filter for alias, the original query source instance will not be impacted by the filter. That's why we need
-                    // to add another filter for original instance when it appears in both side of alias and foreign.
-                    // For example:
-                    //          [Order] LEFT JOIN [Employee]
-                    //      [Aliased Employee] LEFT JOIN [Department]
-                    // If the system needs to add a hidden filter to [Employee], for example: [CompanyId] = 'ALKA'
-                    // It needs to add
-                    //          [Employee].[CompanyId] = 'ALKA' AND [Aliased Employee].[CompanyId] = 'ALKA'
-                    // By this way, it ensures all [Employee] instances are filtered by ALKA company id.
                     if (foreignRelCounts > 0)
                     {
-                        position = addHiddenFilters(filterSetting, position, querySource, field, equalOperator, null);
+                        addHiddenFilters(querySource, field, equalOperator, null);
                     }
 
                     foreach (var rel in rels)
                     {
                         // Loop thru all relationships that the query source is joined as primary and add the hidden field associated with each relationship
-                        position = addHiddenFilters(filterSetting, position, querySource, field, equalOperator, rel);
+                        addHiddenFilters(querySource, field, equalOperator, rel);
                     }
                 }
             }
