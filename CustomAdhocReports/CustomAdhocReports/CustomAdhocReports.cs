@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Izenda.BI.Framework.Models;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Izenda.BI.Framework.Models.ReportDesigner;
 using Izenda.BI.Framework.Utility;
 using Izenda.BI.Framework.Models.Contexts; //For Referencing User Context
