@@ -16,6 +16,8 @@ you can build out any overrides for our IAdHocExtention methods that you would l
 The only .dll you need for this solution to work is the Izenda.BI.Framework.dll, which is already provided for you in the solution. This was constructed
 using the v2.5.0 resources.
 
+**You will need to verify that the Izenda.BI.Framework.dll, in the Lib folder, correlates with the same version as the Izenda resources that you are using within your host application.**
+
 ## Use and Repurposing
 
 In order to use this sample, all you will need to do is create the logic you want to test or employ within the CustomAdhocReports.cs file. Once complete,
