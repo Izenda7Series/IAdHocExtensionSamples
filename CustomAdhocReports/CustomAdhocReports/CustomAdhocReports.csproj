@@ -32,6 +32,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>Lib\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="Izenda.BI.Framework, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Izenda.BI.Framework.dll</HintPath>
@@ -51,11 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomAdhocReports.cs" />
-    <Compile Include="CustomDataFormat.cs" />
-    <Compile Include="CustomReportDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\Dapper.dll" />
     <Content Include="Lib\Izenda.BI.Framework.dll" />
     <Content Include="Lib\System.Composition.AttributedModel.dll" />
   </ItemGroup>
